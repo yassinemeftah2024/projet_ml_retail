@@ -1,0 +1,10 @@
+{
+  "SupportTicketsCount": {
+    "lower": -2.0,
+    "upper": 6.0
+  },
+  "SatisfactionScore": {
+    "lower": -1.0,
+    "upper": 7.0
+  }
+}

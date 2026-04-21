@@ -1,0 +1,657 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{amsmath}
+
+\geometry{margin=2cm}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Atelier Machine Learning}
+\lhead{Analyse Comportementale Clientèle}
+\rfoot{Page \thepage}
+
+\definecolor{headerblue}{RGB}{41, 65, 114}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{accentorange}{RGB}{230, 126, 34}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codepurple}{RGB}{128,0,128}
+\definecolor{backcolour}{RGB}{248,248,248}
+\definecolor{warningred}{RGB}{231, 76, 60}
+\definecolor{successgreen}{RGB}{46, 204, 113}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\tcbset{
+    colback=backcolour,
+    colframe=headerblue,
+    fonttitle=\bfseries,
+    boxrule=1pt,
+    arc=3mm
+}
+
+\titleformat{\section}
+{\color{headerblue}\normalfont\Large\bfseries}
+{\thesection}{1em}{}[{\titlerule[2pt]}]
+
+\titleformat{\subsection}
+{\color{accentorange}\normalfont\large\bfseries}
+{\thesubsection}{1em}{}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\setstretch{1.15}
+
+\begin{document}
+
+% ================= PAGE DE GARDE =================
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+    \fill[headerblue] (current page.north west) rectangle ([yshift=-5cm]current page.north east);
+    \node[anchor=north west, xshift=2cm, yshift=-2cm, text=white] at (current page.north west)
+        {\Huge\textbf{Atelier Machine Learning}};
+    \node[anchor=north west, xshift=2cm, yshift=-3.5cm, text=white] at (current page.north west)
+        {\Large\textit{Analyse Comportementale Clientèle Retail}};
+\end{tikzpicture}
+
+\vspace{6cm}
+
+\begin{center}
+{\LARGE\textbf{COMPTE RENDU}}\par
+\vspace{1cm}
+{\large Atelier Pratique : E-commerce de Cadeaux}\par
+\vspace{2cm}
+{\large \textbf{Préparé par :}}\par
+\vspace{0.4cm}
+{\Large \textbf{Yassine Meftah}}
+
+\vspace{3cm}
+
+\begin{tikzpicture}
+    \draw[headerblue, line width=2pt] (0,0) -- (10,0);
+\end{tikzpicture}
+
+\vspace{2cm}
+
+{\textbf{Année Universitaire : 2025-2026}}
+\end{center}
+\vfill
+\end{titlepage}
+
+% ================= RESUME =================
+\section*{Résumé}
+Ce projet s’inscrit dans le contexte de l’analyse comportementale de la clientèle d’une entreprise de e-commerce de cadeaux. L’objectif principal est de construire une chaîne complète de Machine Learning capable de prédire le churn client, d’explorer la structure des données, de segmenter les profils clients et de proposer une solution d’inférence réutilisable. Pour cela, un pipeline complet a été mis en place : préparation des données, parsing des dates, feature engineering, détection et correction des valeurs aberrantes, suppression des colonnes redondantes ou fuyantes, rééquilibrage des classes par SMOTE/SMOTENC, réduction de dimension par ACP, clustering KMeans, classification supervisée, régression et validation croisée. Le meilleur modèle de classification obtenu est une régression logistique optimisée, avec des performances très élevées en accuracy, F1-score et ROC-AUC. Une phase d’inférence a également été développée via un script de prédiction et une interface Flask. Le projet met ainsi en œuvre une démarche complète, reproductible et proche d’un cas réel de mise en production.
+
+\section*{Abstract}
+This project focuses on customer behavioral analysis in a retail e-commerce context. The main objective is to build a complete Machine Learning pipeline capable of predicting customer churn, exploring data structure, segmenting customer profiles, and providing a reusable inference solution. To achieve this, a full workflow was implemented: data preparation, date parsing, feature engineering, outlier handling, removal of redundant or leakage-prone variables, class rebalancing with SMOTE/SMOTENC, dimensionality reduction with PCA, KMeans clustering, supervised classification, regression, and cross-validation. The best classification model is an optimized logistic regression with excellent performance in terms of accuracy, F1-score, and ROC-AUC. An inference phase was also developed through a prediction script and a Flask interface. Overall, this project demonstrates a complete, reproducible workflow close to a real deployment scenario.
+
+\tableofcontents
+\newpage
+
+% ================= INTRODUCTION =================
+\section{Introduction générale}
+
+\subsection{Contexte}
+Dans le domaine du retail et du e-commerce, l’analyse des données clients constitue un levier stratégique pour améliorer la fidélisation, personnaliser les campagnes marketing et optimiser la rentabilité. La capacité à identifier les clients susceptibles de quitter la plateforme permet d’anticiper les actions commerciales et de réduire la perte de valeur.
+
+\subsection{Problématique}
+Le churn client représente un enjeu majeur pour les entreprises, car il est généralement plus coûteux d’acquérir un nouveau client que de conserver un client existant. Le problème traité dans ce projet consiste donc à exploiter les données comportementales et transactionnelles afin de prédire si un client risque de partir.
+
+\subsection{Objectifs du projet}
+Le projet poursuit plusieurs objectifs complémentaires :
+\begin{itemize}
+    \item développer un modèle de classification pour prédire le churn ;
+    \item analyser la structure des données et identifier les variables importantes ;
+    \item appliquer une réduction de dimension par ACP pour la visualisation et le clustering ;
+    \item segmenter les clients via KMeans ;
+    \item entraîner également un modèle de régression pour prédire \texttt{MonetaryTotal} ;
+    \item déployer une solution d’inférence réutilisable via un script Python et une interface Flask.
+\end{itemize}
+
+\subsection{Démarche suivie}
+La méthodologie suivie s’organise selon une chaîne complète :
+\begin{center}
+\textbf{Préparation des données $\rightarrow$ Transformation $\rightarrow$ Modélisation $\rightarrow$ Évaluation $\rightarrow$ Déploiement}
+\end{center}
+
+% ================= DONNEES =================
+\section{Présentation du jeu de données}
+
+\subsection{Description générale}
+Le dataset étudié correspond à une base client retail contenant des variables numériques, catégorielles et dérivées. Il inclut des informations transactionnelles, temporelles, démographiques et comportementales. La variable cible principale du projet est \texttt{Churn}.
+
+\subsection{Typologie des variables}
+Les variables utilisées peuvent être classées en quatre groupes :
+\begin{itemize}
+    \item \textbf{Variables transactionnelles :} \texttt{Frequency}, \texttt{MonetaryTotal}, \texttt{AvgBasketValue}, \texttt{ReturnRatio}, \texttt{UniqueProducts}, etc.
+    \item \textbf{Variables temporelles :} \texttt{CustomerTenureDays}, \texttt{FirstPurchaseDaysAgo}, \texttt{PreferredHour}, \texttt{PreferredMonth}, etc.
+    \item \textbf{Variables démographiques et catégorielles :} \texttt{Age}, \texttt{Gender}, \texttt{Country}, \texttt{Region}, \texttt{AccountStatus}.
+    \item \textbf{Variables dérivées :} \texttt{RegYear}, \texttt{RegMonth}, \texttt{RegDay}, \texttt{RegWeekday}, \texttt{IsPrivateIP}, \texttt{IpFirstOctet}, \texttt{AvgBasketValue}.
+\end{itemize}
+
+\subsection{Problèmes de qualité identifiés}
+L’analyse du dataset a mis en évidence plusieurs problèmes classiques :
+\begin{itemize}
+    \item valeurs manquantes, notamment sur \texttt{Age} ;
+    \item formats de date incohérents pour \texttt{RegistrationDate} ;
+    \item présence d’outliers sur certaines colonnes numériques ;
+    \item variables inutiles ou constantes ;
+    \item variables potentiellement fuyantes vis-à-vis de la cible ;
+    \item variables redondantes ou fortement corrélées.
+\end{itemize}
+
+% ================= EXPLORATION =================
+\section{Analyse exploratoire et compréhension des données}
+
+\subsection{Qualité des données}
+La première étape a consisté à examiner la qualité globale du jeu de données, notamment la présence de valeurs manquantes, de colonnes constantes, de formats incohérents et de variables peu informatives. Cette phase a servi à guider les choix de nettoyage et de transformation.
+
+\subsection{Corrélations et multicolinéarité}
+Une analyse des corrélations entre variables numériques a été réalisée afin d’identifier les redondances potentielles. En complément, le facteur d’inflation de variance (VIF) a été calculé pour détecter la multicolinéarité sévère.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{reports/correlation_heatmap_numeric.png}
+    \caption{Heatmap de corrélation entre les variables numériques.}
+\end{figure}
+
+L’analyse met en évidence plusieurs groupes de variables liées entre elles, notamment les variables transactionnelles et certaines variables dérivées. Cette lecture a justifié la suppression de certaines colonnes redondantes et l’application d’un filtrage automatique sur les corrélations élevées.
+
+\subsection{Déséquilibre de classes}
+La variable \texttt{Churn} présente un déséquilibre entre la classe des clients fidèles et celle des clients partants. Ce déséquilibre justifie le recours à une stratégie de rééquilibrage par sur-échantillonnage sur le train.
+
+\subsection{Lecture métier}
+Certaines variables ont une interprétation métier directe :
+\begin{itemize}
+    \item \texttt{Frequency} mesure l’intensité d’activité ;
+    \item \texttt{MonetaryTotal} et \texttt{AvgBasketValue} traduisent la valeur économique du client ;
+    \item \texttt{SupportTicketsCount} et \texttt{SatisfactionScore} reflètent la relation client ;
+    \item \texttt{CustomerTenureDays} et \texttt{FirstPurchaseDaysAgo} caractérisent l’ancienneté.
+\end{itemize}
+
+% ================= PREPARATION =================
+\section{Préparation des données}
+
+\subsection{Nettoyage initial}
+Plusieurs colonnes ont été supprimées dès le début du pipeline :
+\begin{itemize}
+    \item \texttt{NewsletterSubscribed}, car il s’agit d’une variable sans variance utile ;
+    \item \texttt{CustomerID}, car il s’agit d’un identifiant ;
+    \item \texttt{ChurnRiskCategory} et toute colonne contenant \texttt{churnrisk}, car elles risquent d’introduire une fuite d’information ;
+    \item \texttt{Recency} et certaines variables dérivées associées, afin d’éviter que le modèle n’apprenne directement une information trop proche de la cible.
+\end{itemize}
+
+\subsection{Parsing et transformation des dates}
+La variable \texttt{RegistrationDate} a été convertie en type date puis décomposée en plusieurs composantes :
+\begin{itemize}
+    \item \texttt{RegYear}
+    \item \texttt{RegMonth}
+    \item \texttt{RegDay}
+    \item \texttt{RegWeekday}
+\end{itemize}
+
+\subsection{Feature engineering}
+Des variables supplémentaires ont été construites à partir des données existantes :
+\begin{itemize}
+    \item \texttt{IsPrivateIP} et \texttt{IpFirstOctet} à partir de \texttt{LastLoginIP} ;
+    \item \texttt{AvgBasketValue} à partir de \texttt{MonetaryTotal} et \texttt{Frequency}.
+\end{itemize}
+D’autres variables dérivées comme \texttt{TenureRatio} ou \texttt{MonetaryPerDay} ont été volontairement exclues lorsqu’elles risquaient d’introduire du leakage.
+
+\subsection{Suppression de variables redondantes}
+Une partie du travail final a consisté à identifier et supprimer des colonnes redondantes ou dupliquant une information déjà portée par d’autres variables. Les colonnes suivantes ont été supprimées :
+\begin{itemize}
+    \item \texttt{CancelledTransactions}
+    \item \texttt{UniqueInvoices}
+    \item \texttt{UniqueDescriptions}
+    \item \texttt{AvgLinesPerInvoice}
+    \item \texttt{MonetaryMin}
+    \item \texttt{MonetaryMax}
+    \item \texttt{MinQuantity}
+\end{itemize}
+
+Ce choix repose à la fois sur l’analyse statistique et sur une lecture métier visant à conserver les variables les plus interprétables.
+
+\subsection{Gestion des outliers}
+Les valeurs aberrantes ont été traitées via la méthode IQR. Les bornes ont été calculées uniquement sur le jeu d’entraînement puis réappliquées au jeu de test et au script d’inférence, afin d’éviter toute fuite d’information.
+
+\subsection{Gestion des valeurs manquantes}
+La stratégie retenue combine plusieurs méthodes :
+\begin{itemize}
+    \item \textbf{médiane} pour la plupart des variables numériques ;
+    \item \textbf{mode} pour les variables catégorielles ;
+    \item \textbf{KNNImputer} spécifiquement pour \texttt{Age}.
+\end{itemize}
+
+\subsection{Suppression de variables}
+Deux types de suppressions ont été effectués :
+\begin{itemize}
+    \item colonnes trop manquantes, selon un seuil évalué sur le train ;
+    \item colonnes numériques trop corrélées entre elles.
+\end{itemize}
+
+\subsection{Encodage et normalisation}
+Le prétraitement final repose sur un \texttt{ColumnTransformer} combinant :
+\begin{itemize}
+    \item \texttt{SimpleImputer} + \texttt{StandardScaler} pour les variables numériques ;
+    \item \texttt{KNNImputer} + \texttt{StandardScaler} pour \texttt{Age} ;
+    \item \texttt{SimpleImputer} + \texttt{OneHotEncoder} pour les variables catégorielles.
+\end{itemize}
+
+\subsection{Rééquilibrage du dataset}
+Le rééquilibrage a été réalisé uniquement sur le train via \texttt{SMOTENC}. Le jeu d’entraînement initial contient 3497 observations, puis 4668 après sur-échantillonnage. La distribution finale des classes devient équilibrée, avec 2334 observations pour chaque classe.
+
+\subsection{Séparation train/test}
+La séparation train/test a été effectuée avec :
+\begin{itemize}
+    \item une proportion de 80/20 ;
+    \item une stratification sur la cible ;
+    \item une reproductibilité assurée par \texttt{random\_state = 42}.
+\end{itemize}
+
+% ================= PCA ET CLUSTERING =================
+\section{Réduction de dimension et segmentation}
+
+\subsection{Analyse en composantes principales (PCA)}
+Une ACP automatique a été appliquée après le prétraitement afin de réduire la dimensionnalité tout en conservant l’essentiel de l’information. Le seuil de variance cumulée retenu a été fixé à 85\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{reports/pca_cumulative_variance.png}
+    \caption{Variance cumulée expliquée par les composantes principales.}
+\end{figure}
+
+\subsection{Interprétation de la PCA}
+La PCA permet à la fois de réduire le bruit, de compresser l’information et de faciliter la visualisation en deux dimensions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{reports/pca_projection_2d.png}
+    \caption{Projection 2D des données après ACP.}
+\end{figure}
+
+\subsection{KMeans}
+Après réduction de dimension, l’algorithme KMeans a été utilisé pour explorer une segmentation non supervisée des clients. Le choix du nombre de clusters s’est appuyé principalement sur le score de silhouette, en complément de l’inertie et d’autres indicateurs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{reports/kmeans_elbow.png}
+    \caption{Méthode du coude pour KMeans.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{reports/kmeans_silhouette.png}
+    \caption{Score de silhouette selon le nombre de clusters.}
+\end{figure}
+
+\subsection{Choix final du nombre de clusters}
+La version finale du code retient automatiquement le nombre de clusters donnant le meilleur score de silhouette. Sur l’exécution finale conservée pour le rapport, le meilleur compromis est obtenu avec \textbf{\(k = 2\)}. Cela signifie que la segmentation la plus stable et la plus défendable dans ce projet oppose deux grands profils de clients plutôt qu’une partition fine en plusieurs groupes.
+
+\subsection{Interprétation des clusters}
+La projection des clusters sur le plan principal permet de visualiser deux groupes globaux. Cette segmentation a une valeur surtout exploratoire : elle permet de distinguer un groupe central de clients au comportement plus standard et un autre groupe davantage atypique ou dispersé.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{reports/kmeans_clusters_pca_map.png}
+    \caption{Visualisation des clusters KMeans sur le plan ACP.}
+\end{figure}
+
+\subsection{Limites de la segmentation}
+La segmentation obtenue est utile pour une lecture exploratoire, mais elle reste secondaire par rapport à la classification supervisée du churn. KMeans n’est donc pas ici la composante la plus forte du projet.
+
+% ================= CLASSIFICATION =================
+\section{Modélisation prédictive : classification}
+
+\subsection{Objectif}
+L’objectif principal de cette partie est de prédire la probabilité de churn à partir des variables préparées.
+
+\subsection{Modèles testés}
+Trois familles de modèles ont été évaluées :
+\begin{itemize}
+    \item \textbf{Logistic Regression}
+    \item \textbf{SVM}
+    \item \textbf{Random Forest}
+\end{itemize}
+
+\subsection{Optimisation des hyperparamètres}
+Le projet ne s’est pas limité à des modèles de base. Une optimisation a été menée par :
+\begin{itemize}
+    \item \texttt{GridSearchCV} pour Logistic Regression ;
+    \item \texttt{GridSearchCV} pour SVM ;
+    \item \texttt{GridSearchCV} pour Random Forest ;
+    \item \texttt{Optuna} pour affiner la régression logistique.
+\end{itemize}
+
+\subsection{Métriques d’évaluation}
+Les métriques retenues sont :
+\begin{itemize}
+    \item Accuracy
+    \item F1-score
+    \item ROC-AUC
+    \item Matrice de confusion
+\end{itemize}
+
+\subsection{Résultats obtenus}
+Le meilleur modèle final est une régression logistique optimisée, avec des performances très élevées :
+\begin{itemize}
+    \item Accuracy $\approx 0.994$
+    \item F1-score $\approx 0.991$
+    \item ROC-AUC $\approx 0.999$
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Synthèse des résultats de classification}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modèle} & \textbf{Accuracy} & \textbf{F1-score} & \textbf{ROC-AUC} \\
+\midrule
+LogisticRegression & 0.9851 & 0.9775 & 0.9981 \\
+LogisticRegression\_GridSearch & 0.9931 & 0.9897 & 0.9993 \\
+LogisticRegression\_Optuna & 0.9943 & 0.9914 & 0.9993 \\
+SVM & 0.9726 & 0.9574 & 0.9956 \\
+SVM\_GridSearch & 0.9771 & 0.9654 & 0.9976 \\
+RandomForest\_baseline & 0.9589 & 0.9362 & 0.9908 \\
+RandomForest\_GridSearch & 0.9566 & 0.9329 & 0.9900 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Matrice de confusion}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{reports/confusion_matrix_best.png}
+    \caption{Matrice de confusion du meilleur modèle de classification.}
+\end{figure}
+
+La matrice de confusion finale montre un très faible nombre d’erreurs. Le modèle identifie correctement la grande majorité des clients fidèles et des clients partants, ce qui confirme sa forte capacité de discrimination.
+
+\subsection{Analyse critique}
+La régression logistique donne ici les meilleurs résultats, ce qui montre qu’un modèle relativement simple peut être extrêmement performant lorsque le prétraitement est rigoureux et que les variables sont très informatives. Toutefois, ces performances très élevées doivent être présentées avec prudence, en gardant à l’esprit la nature du dataset et le risque de variables fortement explicatives de la cible.
+
+% ================= REGRESSION =================
+\section{Modélisation prédictive : régression}
+
+\subsection{Objectif}
+L’objectif secondaire est de prédire \texttt{MonetaryTotal}, c’est-à-dire la valeur monétaire totale associée au client.
+
+\subsection{Modèles testés}
+Deux modèles ont été comparés :
+\begin{itemize}
+    \item Ridge
+    \item RandomForestRegressor
+\end{itemize}
+
+\subsection{Métriques}
+L’évaluation repose sur :
+\begin{itemize}
+    \item RMSE
+    \item MAE
+    \item $R^2$
+\end{itemize}
+
+\subsection{Résultats}
+Le meilleur modèle obtenu est \texttt{RandomForestRegressor}, avec un pouvoir explicatif nettement supérieur à Ridge.
+
+\begin{table}[H]
+\centering
+\caption{Résultats de régression}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modèle} & \textbf{RMSE} & \textbf{MAE} & \textbf{$R^2$} \\
+\midrule
+Ridge & 7731.88 & 1560.31 & 0.4348 \\
+RandomForestRegressor & 4939.50 & 331.68 & 0.7693 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Analyse critique}
+La supériorité du RandomForestRegressor suggère que la relation entre les variables explicatives et \texttt{MonetaryTotal} est non linéaire. Un modèle linéaire comme Ridge reste plus limité dans ce contexte.
+
+% ================= VALIDATION CROISEE =================
+\section{Validation croisée et robustesse}
+
+\subsection{Validation croisée en classification}
+Une validation croisée stratifiée en 5 plis a été réalisée pour les principaux modèles de classification.
+
+\begin{table}[H]
+\centering
+\caption{Validation croisée en classification}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modèle} & \textbf{Accuracy} & \textbf{F1-score} & \textbf{ROC-AUC} \\
+\midrule
+LogisticRegression & 0.9880 $\pm$ 0.0025 & 0.9879 $\pm$ 0.0025 & 0.9992 $\pm$ 0.0003 \\
+SVM & 0.9764 $\pm$ 0.0050 & 0.9762 $\pm$ 0.0052 & 0.9973 $\pm$ 0.0008 \\
+RandomForest & 0.9644 $\pm$ 0.0068 & 0.9641 $\pm$ 0.0070 & 0.9954 $\pm$ 0.0010 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Validation croisée en régression}
+Une validation croisée en 5 plis a également été effectuée pour la régression.
+
+\begin{table}[H]
+\centering
+\caption{Validation croisée en régression}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Modèle} & \textbf{$R^2$} & \textbf{RMSE} \\
+\midrule
+Ridge & 0.2844 $\pm$ 0.4286 & 4698.84 $\pm$ 1604.82 \\
+RandomForestRegressor & 0.6879 $\pm$ 0.0977 & 3335.98 $\pm$ 1231.76 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interprétation}
+Les résultats de validation croisée confirment que les modèles sont globalement stables. La faible variance observée en classification renforce la crédibilité des performances du meilleur classifieur.
+
+% ================= PREDICTION =================
+\section{Prédiction et inférence}
+
+\subsection{Rôle de \texttt{predict.py}}
+Le script \texttt{predict.py} sert à appliquer le modèle entraîné sur de nouvelles données. Il recharge :
+\begin{itemize}
+    \item le préprocesseur sauvegardé ;
+    \item le meilleur modèle de classification ;
+    \item les bornes IQR des outliers ;
+    \item la liste des colonnes supprimées au train.
+\end{itemize}
+
+\subsection{Pipeline d’inférence}
+Le pipeline d’inférence reproduit strictement les étapes apprises pendant la phase d’entraînement :
+\begin{itemize}
+    \item parsing de la date ;
+    \item feature engineering sur l’adresse IP ;
+    \item suppression des mêmes colonnes inutiles ou fuyantes ;
+    \item réapplication du clipping IQR ;
+    \item alignement exact sur les colonnes attendues par le préprocesseur ;
+    \item prédiction finale du churn et de la probabilité associée.
+\end{itemize}
+
+\subsection{Test sur données complètes}
+Les tests effectués sur de vraies lignes complètes du dataset ont montré que le modèle produit des prédictions cohérentes et variées, ce qui confirme que le pipeline appris fonctionne correctement.
+
+\subsection{Limite observée}
+Une limite importante a été identifiée : lorsque l’interface utilisateur ne fournit qu’un petit sous-ensemble des variables attendues par le modèle complet, de nombreuses colonnes sont imputées automatiquement. Cela peut conduire à des prédictions moins fiables ou artificiellement stables.
+
+% ================= DEPLOIEMENT =================
+\section{Déploiement et mise en production avec Flask}
+
+\subsection{Objectif du déploiement}
+L’objectif du déploiement est de rendre le modèle de prédiction du churn accessible via une interface web interactive, permettant à un utilisateur non technique de tester différents profils clients et d’obtenir une estimation du risque de churn accompagnée d’une probabilité.
+
+\subsection{Architecture de la solution}
+La solution déployée repose sur une architecture simple mais complète :
+\begin{itemize}
+    \item un frontend HTML/CSS pour la saisie des informations ;
+    \item une application Flask jouant le rôle de backend ;
+    \item le préprocesseur sauvegardé ;
+    \item le meilleur modèle de classification entraîné ;
+    \item les artefacts nécessaires au pipeline d’inférence.
+\end{itemize}
+
+\subsection{Deux modes de test}
+L’interface permet deux modes d’utilisation :
+\begin{itemize}
+    \item \textbf{Mode manuel} : l’utilisateur saisit 10 variables principales ;
+    \item \textbf{Mode exact dataset} : l’utilisateur choisit l’index d’une ligne réelle de \texttt{X\_test.csv}.
+\end{itemize}
+
+Cette double approche permet à la fois une démonstration simple et une vérification fidèle du comportement réel du modèle.
+
+\subsection{Fonctionnement détaillé}
+Dans la version finale, le backend Flask :
+\begin{itemize}
+    \item récupère les données du formulaire ;
+    \item normalise les formats numériques ;
+    \item convertit les champs nécessaires en type numérique ;
+    \item reconstruit un DataFrame compatible avec le modèle ;
+    \item applique le même pipeline de prétraitement qu’en phase d’entraînement ;
+    \item renvoie la classe prédite et la probabilité associée.
+\end{itemize}
+
+\subsection{Problèmes rencontrés et corrections}
+Plusieurs difficultés ont été rencontrées au cours du déploiement :
+\begin{itemize}
+    \item erreurs de conversion des nombres saisis avec virgule ;
+    \item mauvaise gestion de certaines valeurs manquantes ;
+    \item incohérence entre les variables saisies manuellement et les variables réellement attendues par le modèle ;
+    \item résultats trop extrêmes dans les premières versions de l’interface.
+\end{itemize}
+
+Ces problèmes ont été corrigés en :
+\begin{itemize}
+    \item imposant une conversion plus robuste vers les types numériques ;
+    \item alignant explicitement les colonnes avec celles attendues par le préprocesseur ;
+    \item testant l’application avec des lignes réelles issues de \texttt{X\_test.csv}.
+\end{itemize}
+
+\subsection{Résultats observés dans l’interface}
+Les tests effectués via Flask montrent que le modèle fournit désormais des probabilités réalistes et non seulement des valeurs extrêmes. Par exemple, certaines lignes réelles du jeu de test produisent une probabilité faible de churn, tandis que d’autres donnent une probabilité plus élevée, ce qui confirme le bon fonctionnement du pipeline complet.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{reports/flask_interface.png}
+    \caption{Interface Flask de prédiction du churn.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{reports/flask_result_not_churn.png}
+    \caption{Exemple de prédiction dans Flask : client classé \textit{Not Churn}.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{reports/flask_result_churn.png}
+    \caption{Exemple de prédiction dans Flask : client classé \textit{Churn}.}
+\end{figure}
+
+\subsection{Interprétation métier des probabilités}
+Les probabilités générées par le modèle permettent une lecture plus fine du risque :
+\begin{itemize}
+    \item probabilité faible : client relativement stable ;
+    \item probabilité intermédiaire : client à surveiller ;
+    \item probabilité élevée : client à risque élevé de churn.
+\end{itemize}
+
+\subsection{Limites du déploiement actuel}
+L’interface actuelle est volontairement simplifiée. Elle ne couvre pas toutes les variables utilisées par le modèle complet. Ainsi, en mode manuel, certaines colonnes doivent être imputées automatiquement, ce qui peut introduire un écart avec les prédictions obtenues sur des lignes complètes du dataset.
+
+\subsection{Améliorations possibles}
+Pour aller plus loin, plusieurs extensions sont envisageables :
+\begin{itemize}
+    \item enrichir le formulaire avec davantage de variables ;
+    \item développer un modèle dédié au mode manuel ;
+    \item intégrer une graduation du risque (faible, moyen, élevé) ;
+    \item ajouter des outils d’explicabilité.
+\end{itemize}
+
+% ================= DISCUSSION =================
+\section{Discussion générale}
+
+\subsection{Points forts du projet}
+Les principaux points forts sont :
+\begin{itemize}
+    \item une chaîne ML complète de bout en bout ;
+    \item une gestion méthodologiquement correcte du data leakage ;
+    \item un preprocessing rigoureux ;
+    \item une comparaison de plusieurs modèles ;
+    \item un tuning avancé via GridSearchCV et Optuna ;
+    \item une validation croisée ;
+    \item une phase d’inférence et de déploiement ;
+    \item une interface Flask fonctionnelle pour tester le modèle.
+\end{itemize}
+
+\subsection{Limites}
+Les limites principales du projet sont :
+\begin{itemize}
+    \item le décalage entre le modèle complet et l’interface Flask simplifiée ;
+    \item le caractère surtout exploratoire de la partie PCA/KMeans ;
+    \item la nécessité de rester prudent dans l’interprétation de performances très élevées.
+\end{itemize}
+
+\subsection{Améliorations possibles}
+Plusieurs pistes d’amélioration peuvent être envisagées :
+\begin{itemize}
+    \item construire un modèle dédié à l’interface utilisateur ;
+    \item enrichir les entrées du formulaire Flask ;
+    \item intégrer des outils d’interprétabilité tels que SHAP ;
+    \item calibrer les probabilités ;
+    \item tester le pipeline sur un autre jeu de données.
+\end{itemize}
+
+% ================= CONCLUSION =================
+\section{Conclusion générale}
+
+Ce projet a permis de mettre en œuvre une démarche complète de Machine Learning appliquée à la prédiction du churn client dans un contexte retail. À partir d’un jeu de données riche et imparfait, un pipeline robuste a été construit pour préparer les données, réduire la dimension, segmenter les clients, entraîner plusieurs modèles supervisés, comparer leurs performances et déployer une solution d’inférence.
+
+Le meilleur modèle obtenu est une régression logistique optimisée, offrant d’excellentes performances sur la tâche de classification. En parallèle, un modèle de régression performant a également été mis en place pour prédire la valeur monétaire. Enfin, une interface Flask a été développée afin de démontrer la faisabilité d’un usage applicatif.
+
+L’ensemble du travail montre qu’une préparation rigoureuse des données, une méthodologie soignée et une évaluation sérieuse constituent les fondements d’un projet ML crédible et professionnel.
+
+\end{document}

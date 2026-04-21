@@ -1,0 +1,24 @@
+{
+  "applied": true,
+  "method": "SMOTENC",
+  "original_train_size": 3497,
+  "resampled_train_size": 4668,
+  "class_distribution_after": {
+    "0": 2334,
+    "1": 2334
+  },
+  "categorical_columns_for_smote": [
+    "AgeCategory",
+    "SpendingCategory",
+    "FavoriteSeason",
+    "PreferredTimeOfDay",
+    "Region",
+    "LoyaltyLevel",
+    "WeekendPreference",
+    "BasketSizeCategory",
+    "ProductDiversity",
+    "Gender",
+    "AccountStatus",
+    "Country"
+  ]
+}

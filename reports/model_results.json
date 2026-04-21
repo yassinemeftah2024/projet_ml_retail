@@ -1,0 +1,69 @@
+{
+  "all": [
+    {
+      "model": "LogisticRegression",
+      "accuracy": 0.9828571428571429,
+      "f1": 0.9740034662045061,
+      "roc_auc": 0.9979816880854869
+    },
+    {
+      "model": "LogisticRegression_GridSearch",
+      "accuracy": 0.992,
+      "f1": 0.9879518072289156,
+      "roc_auc": 0.9992997693357811
+    },
+    {
+      "model": "LogisticRegression_Optuna",
+      "accuracy": 0.9931428571428571,
+      "f1": 0.9896907216494846,
+      "roc_auc": 0.9992526950054135
+    },
+    {
+      "model": "SVM",
+      "accuracy": 0.968,
+      "f1": 0.950530035335689,
+      "roc_auc": 0.9957691945582074
+    },
+    {
+      "model": "SVM_GridSearch",
+      "accuracy": 0.9748571428571429,
+      "f1": 0.9618055555555556,
+      "roc_auc": 0.9976403991903215
+    },
+    {
+      "model": "RandomForest_baseline",
+      "accuracy": 0.96,
+      "f1": 0.9380530973451328,
+      "roc_auc": 0.9892729369674715
+    },
+    {
+      "model": "RandomForest_GridSearch",
+      "accuracy": 0.9588571428571429,
+      "f1": 0.9366197183098591,
+      "roc_auc": 0.9896642423386527
+    }
+  ],
+  "best": {
+    "model": "LogisticRegression_GridSearch",
+    "accuracy": 0.992,
+    "f1": 0.9879518072289156,
+    "roc_auc": 0.9992997693357811
+  },
+  "gridsearch_params_lr": {
+    "C": 100.0,
+    "solver": "lbfgs"
+  },
+  "gridsearch_params_svm": {
+    "C": 10.0,
+    "gamma": "auto",
+    "kernel": "rbf"
+  },
+  "gridsearch_params_rf": {
+    "max_depth": 20,
+    "min_samples_leaf": 1,
+    "n_estimators": 200
+  },
+  "optuna_params_lr": {
+    "C": 50.164361002307125
+  }
+}

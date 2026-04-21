@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+
+models/*.joblib
+models/*.pkl
+
+data/processed/
+data/train_test/
+
+reports/*.png
+reports/*.csv
+reports/*.json
+reports/*.pdf
+
+*.log

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Customer Churn Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Churn Prediction</h1>
+        <p class="subtitle">Test the trained model using 10 customer features or a real X_test row.</p>
+
+        <form method="POST" id="predictionForm">
+
+            <div class="mode-box">
+                <label>
+                    <input type="radio" name="mode" value="manual" {% if mode != 'dataset' %}checked{% endif %}>
+                    Manual 10-feature test
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="dataset" {% if mode == 'dataset' %}checked{% endif %}>
+                    Exact test from X_test.csv row index
+                </label>
+            </div>
+
+            <div class="field">
+                <label for="row_index">Row index (for exact dataset test)</label>
+                <input type="number" step="1" name="row_index" id="row_index"
+                       value="{{ form_data.get('row_index', '') }}"
+                       placeholder="e.g. 0, 1, 2, 3...">
+            </div>
+
+            <div class="grid">
+                <div class="field">
+                    <label for="Frequency">Frequency</label>
+                    <input type="number" step="any" name="Frequency" id="Frequency"
+                           value="{{ form_data.get('Frequency', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="MonetaryTotal">Monetary Total</label>
+                    <input type="number" step="any" name="MonetaryTotal" id="MonetaryTotal"
+                           value="{{ form_data.get('MonetaryTotal', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="CustomerTenureDays">Customer Tenure Days</label>
+                    <input type="number" step="any" name="CustomerTenureDays" id="CustomerTenureDays"
+                           value="{{ form_data.get('CustomerTenureDays', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="UniqueProducts">Unique Products</label>
+                    <input type="number" step="any" name="UniqueProducts" id="UniqueProducts"
+                           value="{{ form_data.get('UniqueProducts', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="ReturnRatio">Return Ratio</label>
+                    <input type="number" step="any" name="ReturnRatio" id="ReturnRatio"
+                           value="{{ form_data.get('ReturnRatio', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="Age">Age</label>
+                    <input type="number" step="any" name="Age" id="Age"
+                           value="{{ form_data.get('Age', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="SupportTicketsCount">Support Tickets Count</label>
+                    <input type="number" step="any" name="SupportTicketsCount" id="SupportTicketsCount"
+                           value="{{ form_data.get('SupportTicketsCount', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="SatisfactionScore">Satisfaction Score</label>
+                    <input type="number" step="any" name="SatisfactionScore" id="SatisfactionScore"
+                           value="{{ form_data.get('SatisfactionScore', '') }}">
+                </div>
+
+                <div class="field">
+                    <label for="Gender">Gender</label>
+                    <select name="Gender" id="Gender">
+                        <option value="">Select gender</option>
+                        <option value="M" {% if form_data.get('Gender') == 'M' %}selected{% endif %}>M</option>
+                        <option value="F" {% if form_data.get('Gender') == 'F' %}selected{% endif %}>F</option>
+                        <option value="Unknown" {% if form_data.get('Gender') == 'Unknown' %}selected{% endif %}>Unknown</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="Country">Country</label>
+                    <input type="text" name="Country" id="Country"
+                           placeholder="e.g. United Kingdom"
+                           value="{{ form_data.get('Country', '') }}">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" name="action" value="predict">Predict</button>
+                <button type="submit" name="action" value="reset" class="secondary-btn">Reset</button>
+            </div>
+        </form>
+
+        {% if result is not none %}
+            <div class="result" id="resultBox">
+                <h3>Prediction Result</h3>
+                <p>
+                    Predicted churn:
+                    {% if result == 1 %}
+                        <span class="tag churn">Churn</span>
+                    {% else %}
+                        <span class="tag safe">Not Churn</span>
+                    {% endif %}
+                </p>
+
+                {% if probability is not none %}
+                    <p class="small">Probability of churn: {{ "%.8f"|format(probability) }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error" id="errorBox">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
