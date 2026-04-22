@@ -1,10 +1,10 @@
-Model: LogisticRegression_GridSearch
+Model: RandomForest_GridSearch
 
               precision    recall  f1-score   support
 
-  Fidèle (0)       0.99      0.99      0.99       584
-   Churn (1)       0.99      0.99      0.99       291
+  Fidèle (0)       0.93      0.93      0.93       584
+   Churn (1)       0.86      0.85      0.86       291
 
-    accuracy                           0.99       875
-   macro avg       0.99      0.99      0.99       875
-weighted avg       0.99      0.99      0.99       875
+    accuracy                           0.91       875
+   macro avg       0.89      0.89      0.89       875
+weighted avg       0.90      0.91      0.91       875

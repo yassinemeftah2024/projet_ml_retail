@@ -8,17 +8,13 @@
     "1": 2334
   },
   "categorical_columns_for_smote": [
+    "ProductDiversity",
     "AgeCategory",
-    "SpendingCategory",
     "FavoriteSeason",
     "PreferredTimeOfDay",
     "Region",
-    "LoyaltyLevel",
     "WeekendPreference",
-    "BasketSizeCategory",
-    "ProductDiversity",
     "Gender",
-    "AccountStatus",
     "Country"
   ]
 }

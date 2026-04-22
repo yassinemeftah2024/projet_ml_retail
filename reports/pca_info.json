@@ -1,5 +1,5 @@
 {
   "variance_threshold": 0.85,
-  "selected_n_components": 25,
-  "final_cumulative_variance": 0.8565736106640485
+  "selected_n_components": 22,
+  "final_cumulative_variance": 0.8615426221352044
 }

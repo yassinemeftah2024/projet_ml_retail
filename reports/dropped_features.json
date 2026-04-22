@@ -1,13 +1,5 @@
 {
   "missing_gt_50": [],
-  "high_corr_gt_0_8": [
-    "TotalQuantity",
-    "MaxQuantity",
-    "TotalTransactions"
-  ],
-  "dropped_all": [
-    "MaxQuantity",
-    "TotalQuantity",
-    "TotalTransactions"
-  ]
+  "high_corr_gt_0_8": [],
+  "dropped_all": []
 }

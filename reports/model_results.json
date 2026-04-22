@@ -2,55 +2,55 @@
   "all": [
     {
       "model": "LogisticRegression",
-      "accuracy": 0.9828571428571429,
-      "f1": 0.9740034662045061,
-      "roc_auc": 0.9979816880854869
+      "accuracy": 0.8697142857142857,
+      "f1": 0.8201892744479495,
+      "roc_auc": 0.9490538059596103
     },
     {
       "model": "LogisticRegression_GridSearch",
-      "accuracy": 0.992,
-      "f1": 0.9879518072289156,
-      "roc_auc": 0.9992997693357811
+      "accuracy": 0.8697142857142857,
+      "f1": 0.8201892744479495,
+      "roc_auc": 0.9490538059596103
     },
     {
       "model": "LogisticRegression_Optuna",
-      "accuracy": 0.9931428571428571,
-      "f1": 0.9896907216494846,
-      "roc_auc": 0.9992526950054135
+      "accuracy": 0.8685714285714285,
+      "f1": 0.8188976377952756,
+      "roc_auc": 0.9490538059596103
     },
     {
       "model": "SVM",
-      "accuracy": 0.968,
-      "f1": 0.950530035335689,
-      "roc_auc": 0.9957691945582074
+      "accuracy": 0.8754285714285714,
+      "f1": 0.8221859706362153,
+      "roc_auc": 0.950977969213388
     },
     {
       "model": "SVM_GridSearch",
-      "accuracy": 0.9748571428571429,
-      "f1": 0.9618055555555556,
-      "roc_auc": 0.9976403991903215
+      "accuracy": 0.8914285714285715,
+      "f1": 0.8434925864909391,
+      "roc_auc": 0.9584804406157323
     },
     {
       "model": "RandomForest_baseline",
-      "accuracy": 0.96,
-      "f1": 0.9380530973451328,
-      "roc_auc": 0.9892729369674715
+      "accuracy": 0.8994285714285715,
+      "f1": 0.8482758620689655,
+      "roc_auc": 0.9601545214894319
     },
     {
       "model": "RandomForest_GridSearch",
-      "accuracy": 0.9588571428571429,
-      "f1": 0.9366197183098591,
-      "roc_auc": 0.9896642423386527
+      "accuracy": 0.9051428571428571,
+      "f1": 0.8566493955094991,
+      "roc_auc": 0.9613696276420468
     }
   ],
   "best": {
-    "model": "LogisticRegression_GridSearch",
-    "accuracy": 0.992,
-    "f1": 0.9879518072289156,
-    "roc_auc": 0.9992997693357811
+    "model": "RandomForest_GridSearch",
+    "accuracy": 0.9051428571428571,
+    "f1": 0.8566493955094991,
+    "roc_auc": 0.9613696276420468
   },
   "gridsearch_params_lr": {
-    "C": 100.0,
+    "C": 1.0,
     "solver": "lbfgs"
   },
   "gridsearch_params_svm": {
@@ -61,9 +61,9 @@
   "gridsearch_params_rf": {
     "max_depth": 20,
     "min_samples_leaf": 1,
-    "n_estimators": 200
+    "n_estimators": 400
   },
   "optuna_params_lr": {
-    "C": 50.164361002307125
+    "C": 0.3099941396683384
   }
 }

@@ -1,0 +1,99 @@
+,importance
+cat__FavoriteSeason_Automne,0.1570285958234152
+num_other__PreferredMonth,0.14189869359290208
+num_other__Frequency,0.08174870514816371
+num_other__MonetaryTotal,0.060200965980189224
+num_other__UniqueProducts,0.05462541026070529
+num_other__AvgDaysBetweenPurchases,0.05003649066264763
+cat__FavoriteSeason_Printemps,0.03398912690057528
+num_other__RegYear,0.03159970517513741
+cat__FavoriteSeason_Hiver,0.023289450238771606
+num_other__AvgProductsPerTransaction,0.02116896412945971
+num_other__MonetaryStd,0.02037499500959628
+num_other__AvgQuantityPerTransaction,0.018892176741358523
+num_other__MonetaryAvg,0.018823182833873825
+num_other__RegMonth,0.017676347507840397
+num_other__IpFirstOctet,0.0172026222283075
+cat__WeekendPreference_Semaine,0.016464456675246507
+num_other__RegDay,0.016078607998574242
+num_other__NegativeQuantityCount,0.015767946967034215
+num_age__Age,0.015402078776041368
+num_other__PreferredDayOfWeek,0.014676993186892653
+cat__WeekendPreference_Inconnu,0.014589603805157916
+cat__FavoriteSeason_Été,0.014139164795944388
+num_other__RegWeekday,0.01340168207002147
+num_other__SatisfactionScore,0.013167067497989625
+num_other__PreferredHour,0.01297291856338611
+cat__ProductDiversity_Explorateur,0.012722239885174355
+num_other__WeekendPurchaseRatio,0.012470453025716097
+num_other__SupportTicketsCount,0.012053581960296784
+num_other__ReturnRatio,0.01143183551990297
+cat__ProductDiversity_Modéré,0.007988688692283426
+cat__AgeCategory_Inconnu,0.0039046732095494086
+cat__Gender_Unknown,0.0030722010191363753
+cat__Gender_F,0.00295158094883871
+cat__PreferredTimeOfDay_Matin,0.0027983529292472968
+cat__Gender_M,0.002773292387757685
+cat__PreferredTimeOfDay_Midi,0.002744772904085135
+cat__PreferredTimeOfDay_Après-midi,0.0024861969588846978
+cat__AgeCategory_65+,0.002300013118022656
+cat__AgeCategory_45-54,0.0020268523917392825
+cat__AgeCategory_25-34,0.001959207025806934
+cat__AgeCategory_35-44,0.0019066963821597683
+cat__WeekendPreference_Weekend,0.0018403012606685134
+cat__ProductDiversity_Spécialisé,0.00183601580264219
+num_other__IsPrivateIP,0.0017911111710985775
+cat__Country_United Kingdom,0.0017547239003184525
+cat__AgeCategory_55-64,0.0016951740314339527
+cat__Region_UK,0.0014199117867555822
+cat__AgeCategory_18-24,0.0013608936857656417
+cat__Region_Europe continentale,0.0013170273839111164
+num_other__ZeroPriceCount,0.0006588112467529139
+cat__Country_Germany,0.0005924829678545051
+cat__PreferredTimeOfDay_Soir,0.0005329720272041531
+cat__Country_France,0.0005179036839996112
+cat__Region_Europe du Nord,0.00036284817128263286
+cat__Country_Spain,0.0003298245216278464
+cat__Country_Denmark,0.00025176922487380805
+cat__Region_Autre,0.00023560719472255482
+cat__Country_Belgium,0.00022148092249858588
+cat__Country_Switzerland,0.00019050879533238422
+num_other__UniqueCountries,0.0001873096829214006
+cat__Country_Norway,0.00018014077876700552
+cat__Country_Portugal,0.00017684828683525898
+cat__Region_Europe centrale,0.00014760017343634583
+cat__Country_EIRE,0.00011964954872520608
+cat__Region_Europe du Sud,0.00011306151196776572
+cat__Country_Italy,0.00010829240799094178
+cat__Region_Asie,0.0001049484170344291
+cat__Region_Amérique du Nord,0.00010114182189115344
+cat__Country_Australia,9.623477209288614e-05
+cat__Region_Moyen-Orient,8.787724873854284e-05
+cat__Country_Austria,8.510012871010319e-05
+cat__Country_European Community,8.45709357581444e-05
+cat__Country_USA,7.460614459333803e-05
+cat__Country_Japan,7.356851745680307e-05
+cat__Region_Océanie,6.474506646093024e-05
+cat__Country_Unspecified,5.9708918621711635e-05
+cat__Country_Netherlands,5.397703279139749e-05
+cat__Country_Israel,4.8774381742789016e-05
+cat__Country_Canada,3.962912615531285e-05
+cat__Country_Finland,3.900440037976142e-05
+cat__Country_Cyprus,3.300519445779447e-05
+cat__Country_Sweden,3.28986604325704e-05
+cat__Country_Lithuania,3.116453179444976e-05
+cat__Country_Channel Islands,2.5309807915966073e-05
+cat__Country_Greece,2.427973785318157e-05
+cat__Country_Malta,2.2920125806751116e-05
+cat__Region_Europe de l'Est,1.9620426625968855e-05
+cat__Country_Poland,1.4636917740220522e-05
+cat__Country_Czech Republic,1.0664733799553171e-05
+cat__Country_Brazil,5.056421064602725e-06
+cat__Country_United Arab Emirates,4.6603534757078606e-06
+cat__Country_Lebanon,3.6069958738787748e-06
+cat__Region_Amérique du Sud,3.5458098444945827e-06
+cat__Country_Singapore,2.977165244991871e-06
+cat__Country_Bahrain,2.038162847016824e-06
+cat__Region_Afrique,8.464790607710939e-07
+cat__Country_Iceland,2.046651407401759e-08
+cat__Country_RSA,0.0
